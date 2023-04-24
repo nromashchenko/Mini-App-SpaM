@@ -37,14 +37,14 @@ std::string fswm_params::g_outfoldername = "./";
 std::string fswm_params::g_paramfname = "";
 
 // General parameters
-uint16_t fswm_params::g_weight = 12;
+uint16_t fswm_params::g_weight = 8;
 uint16_t fswm_params::g_spaces = 32;
 std::string fswm_params::g_assignmentMode = "SPAMX";
 bool fswm_params::g_verbose = false;
 int fswm_params::g_filteringThreshold = GlobalParameters::calculate_filteringThreshold();
 int fswm_params::g_filteringThresholdMultiplicator = 0;
 bool fswm_params::g_sampling = false;
-int fswm_params::g_minHashLowerLimit = 10000000;
+uint32_t fswm_params::g_minHashLowerLimit = 10000000;
 bool fswm_params::g_draftGenomes = false;
 std::string fswm_params::g_delimiter = "_";
 
@@ -315,8 +315,8 @@ bool GlobalParameters::parse_parameters(int argc, char *argv[]) {
 }
 
 bool GlobalParameters::check_parameters() {
-	if(fswm_params::g_weight < 2 || fswm_params::g_weight > 32) {
-		std::cerr << "ERROR: Weight (-k) must be between 2 and 32"<< std::endl;
+	if(fswm_params::g_weight < 2 || fswm_params::g_weight > 8) {
+		std::cerr << "ERROR: Weight (-k) must be between 2 and 8"<< std::endl;
 		print_to_console();
 		exit (EXIT_FAILURE);
 	}

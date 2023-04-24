@@ -48,7 +48,7 @@ std::vector<seq_id_t> ReadManager::get_next_partition_BucketManager(std::vector<
 		currentSeq++;
 	}
 
-	bucketManagerReads.create_wordGroups();
+	//bucketManagerReads.create_wordGroups();
 
 	currentPartition++;
 	return readIDs;

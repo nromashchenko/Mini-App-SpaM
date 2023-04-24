@@ -32,6 +32,8 @@
 #include "Match.h"
 #include "MatchManager.h"
 
+//#pragma clang diagnostic push
+//#pragma ide diagnostic ignored "openmp-use-default-none"
 void Placement::phylogenetic_placement() {
 	// Initialize pattern
 	Pattern pattern = Pattern(fswm_params::g_numPatterns, fswm_params::g_weight + fswm_params::g_spaces,
@@ -90,14 +92,14 @@ void Placement::phylogenetic_placement() {
 
 	// Compare buckets of reads and genomes
 	std::cout << "-> Comparing reads and genomes." << std::endl;
-	#pragma omp parallel for
-	for (int currentPartition = 0; currentPartition < readManager.get_partitions(); currentPartition++) {
+	//#pragma omp parallel for
+	for (size_t currentPartition = 0; currentPartition < readManager.get_partitions(); currentPartition++) {
 		if (fswm_params::g_verbose) { std::cout << "-> Starting partition " << currentPartition << std::endl; }
 
 		BucketManager bucketManagerReads;
 		BucketManager bucketManagerGenomes;
 		std::vector<seq_id_t> readIDs;
-		#pragma omp critical
+		//#pragma omp critical
 		{
 		readIDs = readManager.get_next_partition_BucketManager(seeds, bucketManagerReads);
 		bucketManagerGenomes = genomeManager.get_BucketManager();
@@ -107,7 +109,7 @@ void Placement::phylogenetic_placement() {
 
 		Algorithms::fswm_complete(bucketManagerGenomes, bucketManagerReads, fswm_distances);
 
-		#pragma omp critical
+		//#pragma omp critical
 		{
 			std::cout << "\t-> Read partition " << currentPartition << ": Calculating distances." << std::endl;
 			fswm_distances.calculate_fswm_distances();
@@ -134,6 +136,7 @@ void Placement::phylogenetic_placement() {
 		}
 	}
 }
+//#pragma clang diagnostic pop
 
 void Placement::create_output_files() {
 	std::ofstream assignmentJPlaceFile;

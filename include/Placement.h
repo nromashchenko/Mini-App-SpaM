@@ -16,16 +16,6 @@
 #ifndef FSWM_PLACEMENT_H
 #define FSWM_PLACEMENT_H
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include "Word.h"
-
-
-
-
-
 class Placement {
 	public:
 		static void phylogenetic_placement();

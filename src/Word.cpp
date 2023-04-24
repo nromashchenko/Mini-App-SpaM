@@ -18,9 +18,8 @@
 /**
  * Create a (spaced) word based on hashes for matches and dont cares and calculate minimizer.
  */
-Word::Word(seq_id_t seqID, pos_t seqPos, word_t matches, word_t dontCares) {
+Word::Word(seq_id_t seqID, word_t matches, word_t dontCares) {
 	this->seqID = seqID;
-	this->seqPos = seqPos;
 	this->matches = matches;
 	this->dontCares = dontCares;
 	this->minimizer = this->matches & 0xF;
@@ -58,7 +57,7 @@ std::ostream& operator<<(std::ostream &strm, const Word &word) {
 	}
 	std::reverse(dontCaresWord.begin(), dontCaresWord.end());
 
-	return strm << "Word(seqID=" << word.seqID << ", pos=" << word.seqPos << ", weight=" << fswm_params::g_weight
+	return strm << "Word(seqID=" << word.seqID << ", weight=" << fswm_params::g_weight
 	  << ", spaces=" << fswm_params::g_spaces << ")" << std::endl
 	  << "Matches:" << std::endl << matchesWord << std::endl
 	  << "DontCares:" << std::endl << dontCaresWord << std::endl;

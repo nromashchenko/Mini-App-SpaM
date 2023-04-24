@@ -17,50 +17,20 @@
 #define FSWM_BucketManager_H_
 
 #include <unordered_map>
-#include "Bucket.h"
-#include "Word.h"
-#include "Scoring.h"
+#include "GlobalParameters.h"
 
-class BucketManager {
 
-	private:
-		int32_t bucketCount;
-		std::unordered_map<minimizer_t,Bucket> minimizersToBuckets;
-		std::vector<minimizer_t> minimizers;
+struct BucketManager {
+    // TODO: We may need to store this in a more sophisticated data structure
+    // (for compression)
+    using SeqMismatchIndex = std::vector<mismatch_t>;
 
-	public:
-		// Constructors
-		BucketManager();
+    using seqToIndex = std::unordered_map<seq_id_t, SeqMismatchIndex>;
 
-		// Functions
-		bool insert_word(Word &word);
-		bool sort_words_in_buckets();
-		bool create_wordGroups();
+    std::vector<seqToIndex> buckets;
 
-		// Debug functions
-		bool print_bucket_information() const;
+    BucketManager();
 
-		// Get & Set
-		int get_bucketCount() const;
-		std::vector<minimizer_t> get_minimizers();
-		Bucket get_bucket(minimizer_t minimizer);
+    void insert(match_t match, seq_id_t seqID, mismatch_t mismatch);
 };
-
-inline bool BucketManager::insert_word(Word &word) {
-	minimizersToBuckets.find(word.minimizer)->second.add_word(word);
-	return true;
-}
-
-inline int BucketManager::get_bucketCount() const {
-	return bucketCount;
-}
-
-inline std::vector<minimizer_t> BucketManager::get_minimizers() {
-	return minimizers;
-}
-
-inline Bucket BucketManager::get_bucket(minimizer_t minimizer) {
-	return minimizersToBuckets.find(minimizer)->second;
-}
-
 #endif

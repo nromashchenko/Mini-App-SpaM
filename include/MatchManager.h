@@ -18,7 +18,6 @@
 
 #include <unordered_map>
 #include <vector>
-#include "Word.h"
 #include "Match.h"
 
 typedef std::unordered_map<seq_id_t, std::unordered_map<pos_t, std::vector<Match> > > matchMap;

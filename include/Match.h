@@ -16,7 +16,7 @@
 #ifndef FSWM_MATCHES_H_
 #define FSWM_MATCHES_H_
 
-#include "Word.h"
+#include "GlobalParameters.h"
 
 struct Match {
 	int score;
@@ -38,10 +38,10 @@ struct Match {
 		return score == otherMatch.score;
 	}
 
-	friend std::ostream& operator<<(std::ostream &strm, const Match &match) {
+	/*friend std::ostream& operator<<(std::ostream &strm, const Match &match) {
 		return strm << "Match(score=" << match.score << ", mismatches=" << match.mismatches << ", readID=" << match.readID
 			  << ", readPos=" << match.readPos << ", genomeID=" << match.genomeID << ", genomePos=" << match.genomePos << ")";
-	}
+	}*/
 };
 
 #endif

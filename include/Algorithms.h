@@ -17,13 +17,16 @@
 #define FSWM_ALGORITHMS_H_
 
 #include <vector>
-#include "Word.h"
 #include "BucketManager.h"
+
+class Scoring;
 
 class Algorithms {		
 	public:
 		// Complete checks the quadratic number of matches between corresponding buckets
-		static bool fswm_complete(BucketManager &genomeBucketManager, BucketManager &readBucketManager, Scoring &fswm_distances);
+		static bool fswm_complete(const BucketManager &genomeBucketManager,
+                                  const BucketManager &readBucketManager,
+                                  Scoring &fswm_distances);
 };
 
 #endif

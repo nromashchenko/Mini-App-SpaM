@@ -20,18 +20,14 @@
 #include <vector>
 #include <string>
 
-// Spaced words and dont care positions are encoded in 64bit (2 bits per base).
-// Thus the number of match and don't care positions cannot exceed 32 characters.
-typedef uint64_t word_t;
+typedef uint16_t match_t;
 
-// Minimizers are encoded with 16 characters as maximum.
-typedef uint32_t minimizer_t;
-
-// Position of spaced word occurences in sequences.
-typedef uint32_t pos_t;
+typedef uint64_t mismatch_t;
 
 // Each input sequence has its own internal id.
 typedef uint32_t seq_id_t;
+
+typedef uint32_t pos_t;
 
 typedef double scoring_t;
 typedef int32_t count_t;
@@ -78,7 +74,7 @@ namespace fswm_params {
 	extern bool g_sampling;
 
 	// When sampling is on, only consider spaced words with crc32(word) < g_minHashLowerLimit.
-	extern int g_minHashLowerLimit;
+	extern uint32_t g_minHashLowerLimit;
 
 	// If true, input reference fasta is treated as unassembled genomes with delimiter
 	extern bool g_draftGenomes;

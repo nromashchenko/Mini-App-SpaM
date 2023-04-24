@@ -16,7 +16,6 @@
 
 #include <math.h>
 #include "GenomeManager.h"
-#include "Word.h"
 #include "SeqIO.h"
 #include "GlobalParameters.h"
 
@@ -32,14 +31,19 @@ GenomeManager::GenomeManager(std::string genomesfname, std::vector<Seed> &seeds)
 	this->genomeCount = genomes.size();
 
 	if (fswm_params::g_verbose) { std::cout << "\t" << "Creating spaced words for genomes." << std::endl; }
-	for (auto &genome : genomes) {
+    size_t i = 0;
+	for (const auto &genome : genomes) {
 		genome.fill_buckets(seeds, bucketManagerGenomes);
+
+        //std::cout << i << " / " << genomes.size() << std::endl;
+        i++;
+
 	}
 
 	genomes.clear();
 	genomes.shrink_to_fit();
 
-	bucketManagerGenomes.create_wordGroups();
+	//bucketManagerGenomes.create_wordGroups();
 }
 
 /**

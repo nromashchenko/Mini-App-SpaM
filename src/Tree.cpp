@@ -20,6 +20,7 @@
 #include <limits>
 #include <unordered_set>
 #include <string>
+#include <algorithm>
 #include "Tree.h"
 #include "SubstitutionMatrix.h"
 
@@ -233,6 +234,7 @@ seq_id_t Tree::get_LCA_best_count(countMap_t::iterator &it) {
 	seq_id_t second_id = 0;
 
 	for (auto const &seqIDtoScoring : it->second) {
+        //std::cout << "\t" << seqIDtoScoring.first << " : " << seqIDtoScoring.second << std::endl;
 		if (seqIDtoScoring.second > first) {
 			second = first;
 			second_id = first_id;

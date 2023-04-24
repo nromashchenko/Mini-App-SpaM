@@ -60,9 +60,9 @@ Sequence::Sequence(std::string &header, std::string &seqLine, seq_id_t seqID) {
 }
 
 /**
- * Go through sequence and fill buckets with spaced words in sequence.
+ * Go through sequence and fill buckets with spaced words of the sequences and its reverse complement
  */
-void Sequence::fill_buckets(std::vector<Seed> &seeds, BucketManager &bucketManager) {
+void Sequence::fill_buckets(const std::vector<Seed> &seeds, BucketManager &bucketManager) const {
 
 	const size_t NumBytes = 8;
 
@@ -70,64 +70,52 @@ void Sequence::fill_buckets(std::vector<Seed> &seeds, BucketManager &bucketManag
 		std::vector<int> matchPos = seed.get_matchPos();
 		std::vector<int> dontCarePos = seed.get_dontCarePos();
 
-	// Go through all spaced words in sequence and save to bucket
-	uint32_t go_until = std::max(int(seq.size() - fswm_params::g_weight - fswm_params::g_spaces + 1), 0);
-	for (uint32_t i = 0; i < go_until; i++) {
-		// Create spaced word at position i and give word to BucketManager for further processing
-		word_t matches = 0;
-		for (auto const &pos : matchPos) {
-			matches = matches << 2;
-			matches += seq[i+pos];
-		}
-	
-		// Create spaced word at position i and give word to BucketManager for further processing
-		word_t dontCares = 0;
-		for (auto const &pos : dontCarePos) {
-			dontCares = dontCares << 2;
-			dontCares += seq[i+pos];
-		}
+        // Go through all spaced words in sequence and save to bucket
+        uint32_t go_until = std::max(int(seq.size() - fswm_params::g_weight - fswm_params::g_spaces + 1), 0);
+        for (uint32_t i = 0; i < go_until; i++) {
 
-		if (fswm_params::g_sampling) {
-			auto res = crc32_fast(&matches, NumBytes);
-			if (res < fswm_params::g_minHashLowerLimit) {
-				Word newWord = Word(seqID, i, matches, dontCares);
-				bucketManager.insert_word(newWord);
-			}
-		}
-		else {
-			Word newWord = Word(seqID, i, matches, dontCares);
-			bucketManager.insert_word(newWord);
-		}
-	}
+            // Create spaced word at position i and give word to BucketManager for further processing
+            match_t matches = 0;
+            for (auto const &pos : matchPos) {
+                matches = matches << 2;
+                matches += seq[i+pos];
+            }
 
-	for (uint32_t i = 0; i < go_until; i++) {
-		// Create spaced word at position i and give word to BucketManager for further processing
-		word_t matches = 0;
+            // Create spaced word at position i and give word to BucketManager for further processing
+            mismatch_t dontCares = 0;
+            for (auto const &pos : dontCarePos) {
+                dontCares = dontCares << 2;
+                dontCares += seq[i+pos];
+            }
 
-		for (auto const &pos : matchPos) {
-			matches = matches << 2;
-			matches += seqRev[i+pos];
-		}
-	
-		// Create spaced word at position i and give word to BucketManager for further processing
-		word_t dontCares = 0;
-		for (auto const &pos : dontCarePos) {
-			dontCares = dontCares << 2;
-			dontCares += seqRev[i+pos];
-		}
+            // If sampling is on, test the hash and maybe insert; otherwise just insert
+            const auto insert = !(fswm_params::g_sampling)
+                                || (crc32_fast(&matches, NumBytes) < fswm_params::g_minHashLowerLimit);
+            if (insert) {
+                bucketManager.insert(matches, seqID, dontCares);
+            }
+        }
 
-		if (fswm_params::g_sampling) {
-			auto res = crc32_fast(&matches, NumBytes);
-			if (res < fswm_params::g_minHashLowerLimit) {
-				Word newWord = Word(seqID, i, matches, dontCares);
-				bucketManager.insert_word(newWord);
-			}
-		}
-		else {
-			Word newWord = Word(seqID, i, matches, dontCares);
-			bucketManager.insert_word(newWord);
-		}
-		
-	}
+        // the same for the reverse complement sequence
+        for (uint32_t i = 0; i < go_until; i++) {
+            match_t matches = 0;
+
+            for (auto const &pos : matchPos) {
+                matches = matches << 2;
+                matches += seqRev[i+pos];
+            }
+
+            mismatch_t dontCares = 0;
+            for (auto const &pos : dontCarePos) {
+                dontCares = dontCares << 2;
+                dontCares += seqRev[i+pos];
+            }
+
+            const auto insert = !(fswm_params::g_sampling)
+                                || (crc32_fast(&matches, NumBytes) < fswm_params::g_minHashLowerLimit);
+            if (insert) {
+                bucketManager.insert(matches, seqID, dontCares);
+            }
+        }
 	}
 }

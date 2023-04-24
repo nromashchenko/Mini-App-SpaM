@@ -21,9 +21,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <bitset>
-#include "Word.h"
 #include "Seed.h"
-#include "Bucket.h"
 #include "BucketManager.h"
 
 class Sequence {
@@ -37,7 +35,7 @@ class Sequence {
 	public:
 		Sequence(std::string &header, std::string &seqLine, seq_id_t seqID);
 
-		void fill_buckets(std::vector<Seed> &seeds, BucketManager &bucket_manager);
+		void fill_buckets(const std::vector<Seed> &seeds, BucketManager &bucket_manager) const;
 
 		std::string get_header() const;
 		seq_id_t get_seqID() const;
