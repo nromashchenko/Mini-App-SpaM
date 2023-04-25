@@ -35,7 +35,11 @@ GenomeManager::GenomeManager(std::string genomesfname, std::vector<Seed> &seeds)
 	for (const auto &genome : genomes) {
 		genome.fill_buckets(seeds, bucketManagerGenomes);
 
-        //std::cout << i << " / " << genomes.size() << std::endl;
+        if (i % 1000 == 0)
+        {
+            std::cout << i << " / " << genomes.size() << std::endl;
+        }
+
         i++;
 
 	}
